@@ -67,6 +67,14 @@ async def allocations():
 
     return rank_countries(await affectedCountries())
 
+@app.get("/fundAllocations/string")
+async def allocations():
+    """
+    Get a list of countries affected by natural disasters and find countries which need the most help
+    """
+
+    return str(rank_countries(await affectedCountries()))
+
 
 def calculate_score(country_data):
     info = country_data
@@ -84,7 +92,7 @@ def rank_countries(countries):
     for country, info in countries.items():
         weightage = info['severity_score'] / total_score
         ranked_allocation['countries'].append({"name": country, "weightage": weightage})
-
+    ranked_allocation['countries'] = sorted(ranked_allocation['countries'], key = lambda i: i['weightage'],reverse=True)
     return ranked_allocation
 
 
